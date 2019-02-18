@@ -49,14 +49,17 @@ function! s:git_timestamp_job_cb(job, lines, event)
   else
     let g:git_info_last_commit_timestamp = l:timestamp
   endif
+  let s:job_timestamp = -2
 endfunction
 
 function! s:git_branch_job_cb(job, lines, event)
-  let g:git_info_branch_phrase = a:lines[0]
+  let g:git_info_branch_name = a:lines[0]
+  let s:job_branch = -2
 endfunction
 
 function! s:git_diff_job_cb(job, lines, event)
   let s:job_diff_response = a:lines[0]
+  let s:job_diff = -2
   " check pair function is finished, else it's done in the other
   if s:job_status_response != -1
     call s:handle_diff_and_status_responses(s:job_diff_response, s:job_status_response)
@@ -67,6 +70,7 @@ function! s:git_status_job_cb(job, lines, event)
   " have to filter out all lines that start with ??
   let l:untracked = len(filter(a:lines, 'v:val =~? ''\v^\?\?'''))
   let s:job_status_response = l:untracked
+  let s:job_status = -2
   " check pair function is finished, else it's done in the other
   if s:job_diff_response != -1
     call s:handle_diff_and_status_responses(s:job_diff_response, s:job_status_response)
@@ -79,13 +83,7 @@ function! s:handle_diff_and_status_responses(diff, status)
 endfunction
 
 function! git_info#_update_git_status_globals(details)
-  let g:git_info_status_details = a:details
-
-  if a:details.changed > 0 || a:details.untracked > 0
-    let g:git_info_dirty_flag = 1
-  else
-    let g:git_info_dirty_flag = 0
-  endif
+  let g:git_info_changes = a:details
 
   let l:phrase = ''
 
@@ -105,7 +103,7 @@ function! git_info#_update_git_status_globals(details)
     let l:phrase .= '∌'. a:details.untracked
   endif
 
-  let g:git_info_status_phrase = l:phrase
+  let g:git_info_changes.as_string = l:phrase
 endfunction
 
 function! git_info#_extract_git_status_details(diff, untracked)

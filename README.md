@@ -2,7 +2,7 @@
 
 A **neovim** plugin that extracts git repo information to a few global variables for use in your status line (or other things).
 
-Information is extracted via background jobs either on buffer load and save or at a regular interval.
+Information is extracted via asynchronous background jobs either on buffer load and save.
 
 Information is relative to the current buffer, not vim current working directory.
 
@@ -20,22 +20,22 @@ Currently, `git-info` is not compatible with VIM due to incompatibilities in the
 
 `git-info` exposes the following variables:
 
-- `g:git_info_branch_phrase`: the name of the current branch.
+- `g:git_info_branch_name`: the name of the current branch.
 
-- `g:git_info_last_commit_timestamp`: a number representing the unix timestamp of the last git commit. `-1` if no commit has been made. You can convert this to a readable format with [time-ago.vim](http://github.com/rktjmp/time-ago.vim) ("10 days ago") or to date with `strftime`. 
+- `g:git_info_last_commit_timestamp`: a number representing the unix timestamp of the last git commit.
+  - `-1` if no commit has been made.
+  - You can convert this to a readable format with [time-ago.vim](http://github.com/rktjmp/time-ago.vim) ("10 days ago") or to date with `strftime`. 
 
-- `g:git_info_status_details`: a map of integers, containing the following keys:
+- `g:git_info_changes`: a map containing the following keys:
   - `changed`: number of files with uncommitted changes.
-  - `insertions`: number of `diff` insertions (linewise). (see note below)
+  - `insertions`: number of `diff` insertions (linewise).
   - `deletions`: number of `diff` deletions (linewise).
   - `untracked`: number of untracked files in the repository directory.
-
-- `g:git_info_status_phrase`: a condensed & opinionated representation of `g:git_info_status_details`. `''` if no changes or untracked files.
-  - `Δ2±3/4∌1`: should be read as "the repo delta contains 2 altered files with 3 insertions and 4 deletions. 1 file is untracked (not included in the change set)".
-  - `Δ5±0/6`: 5 files changed, 0 insertions, 6 deletions, no untracked files
-  - `Δ0∌2`: 0 files changed, 2 untracked files
-
-- `g:git_info_dirty_flag`: an opinionated "dirty repository" flag. `git-info`  considers a repository dirty if it contains any changed files *or* any untracked files. You can inspect `g:git_info_status_details` if you prefer a different definition.
+  - `as_string`: a condensed & opinionated representation of the changes.
+    - `''` if no changes or untracked files.
+    - `Δ2±3/4∌1`: should be read as "the repo delta contains 2 altered files with 3 insertions and 4 deletions. 1 file is untracked (not included in the change set)".
+    - `Δ5±0/6`: 5 files changed, 0 insertions, 6 deletions, no untracked files
+    - `Δ0∌2`: 0 files changed, 2 untracked files
 
 # Notes
 
