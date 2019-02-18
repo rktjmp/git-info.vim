@@ -1,7 +1,14 @@
 GIT-INFO CHANGE LOG
 ----------------
 
-v0.1.0
+9b1aa6c
+
+- rename branch phrase to branch name
+- rename status details to changes
+- consolidate status phrase into changes map
+- remove dirty flag
+
+412508d
 
 - added last commit timestamp
 - added branch phrase
