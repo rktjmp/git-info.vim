@@ -37,6 +37,65 @@ Currently, `git-info` is not compatible with VIM due to incompatibilities in the
     - `Δ5±0/6`: 5 files changed, 0 insertions, 6 deletions, no untracked files
     - `Δ0∌2`: 0 files changed, 2 untracked files
 
+## [Lightline](http://github.com/itchyny/lightline.vim) Configuration Example
+
+    let g:lightline = {
+          \ 'component_function': {
+          \   'git_branch': 'LightlineGitBranchName',
+          \   'git_commit_age': 'LightlineGitLastCommit',
+          \   'git_status': 'LightlineGitStatus',
+          \   'git_dirty': 'LightlineGitDirty',
+          \ },
+          \ 'active' : {
+          \   'left': [['mode', 'paste'], ['git_branch', 'git_dirty', 'git_commit_age', 'git_status', 'filename']]
+          \ },
+          \ }
+
+    function! LightlineGitBranchName()
+      " check if branch name is set, add icon
+      " else return nothing which hides the subsection
+      " if you did not want the icon you could just return the branch name
+      " without checking, which will be blank if not inside a git repo
+      if len(g:git_info_branch_name)
+        return '⭠ ' . g:git_info_branch_name
+      endif
+      return ''
+    endfunction
+
+    function! LightlineGitDirty()
+      " dirty flag is left to the user since there are differening opinions
+      " on whether untracked files count towards 'dirty' status
+      " g:git_info_changes.as_string provides the same information
+      if g:git_info_changes.changed > 0 || g:git_info_changes.untracked > 0
+        return '*'
+      endif
+      return ''
+    endfunction
+
+    function! LightlineGitStatus()
+      " return the as_string representation, which will be '' if no changes
+      " are present, which will hide the subsection
+      return g:git_info_changes.as_string
+    endfunction
+
+    function! LightlineGitLastCommit()
+      " check if there is no last commit
+      if g:git_info_last_commit_timestamp == -1
+        " hide subsection
+        return ''
+      endif
+      " have a commit, convert it to a fuzzy phrase
+      let l:phrase = time_ago#fuzzy(g:git_info_last_commit_timestamp)
+      " minimise the terms
+      let l:phrase = substitute(l:phrase, '\v weeks?', 'w', '')
+      let l:phrase = substitute(l:phrase, '\v days?', 'd', '')
+      let l:phrase = substitute(l:phrase, '\v hours?', 'h', '')
+      let l:phrase = substitute(l:phrase, '\v minutes?', 'm', '')
+      " remove ', ' if present
+      let l:phrase = substitute(l:phrase, '\v, ', '', '')
+      return l:phrase
+    endfunction
+
 # Notes
 
 - Renaming a file with no changes will return 1 file changed and 0 insertions, 0 deletions, 0 untracked.
