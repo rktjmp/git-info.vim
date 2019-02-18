@@ -6,6 +6,8 @@ Information is extracted via background jobs either on buffer load and save or a
 
 Information is relative to the current buffer, not vim current working directory.
 
+Currently, `git-info` is not compatible with VIM due to incompatibilities in the async job API.
+
 ![demo-image](git-info-demo.png)
 
 # Installation
@@ -20,7 +22,7 @@ Information is relative to the current buffer, not vim current working directory
 
 - `g:git_info_branch_phrase`: the name of the current branch.
 
-- `g:git_info_last_commit_timestamp`: a number representing the unix timestamp of the last git commit. `-1` if no commit has been made. You can conver this to a readable format with [time-ago.vim](http://github.com/rktjmp/time-ago.vim) ('10 days ago') or to date with `strftime`. 
+- `g:git_info_last_commit_timestamp`: a number representing the unix timestamp of the last git commit. `-1` if no commit has been made. You can convert this to a readable format with [time-ago.vim](http://github.com/rktjmp/time-ago.vim) ("10 days ago") or to date with `strftime`. 
 
 - `g:git_info_status_details`: a map of integers, containing the following keys:
   - `changed`: number of files with uncommitted changes.
