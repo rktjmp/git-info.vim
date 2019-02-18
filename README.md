@@ -6,6 +6,8 @@ Information is extracted via background jobs either on buffer load and save or a
 
 Information is relative to the current buffer, not vim current working directory.
 
+![demo-image](git-info-demo.png)
+
 # Installation
 
 ## Using [vim-plug](https://github.com/junegunn/vim-plug)
