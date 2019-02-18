@@ -1,0 +1,11 @@
+GIT-INFO CHANGE LOG
+----------------
+
+v0.1.0
+
+- added last commit timestamp
+- added branch phrase
+- added status phrase
+- added status details
+- added dirty flag
+

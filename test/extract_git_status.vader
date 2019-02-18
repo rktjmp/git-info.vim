@@ -1,0 +1,51 @@
+Execute (_extract_git_status_details plurals):
+  let x = git_info#_extract_git_status_details('3 files changed, 10 insertions, 3 deletions', 2)
+
+Then ():
+  AssertEqual x.untracked, 2
+  AssertEqual x.changed, 3
+  AssertEqual x.insertions, 10
+  AssertEqual x.deletions, 3
+
+Execute (_extract_git_status_details singular):
+  let x = git_info#_extract_git_status_details('1 file changed, 5 insertion, 8 deletion', 0)
+
+Then ():
+  AssertEqual x.untracked, 0
+  AssertEqual x.changed, 1
+  AssertEqual x.insertions, 5 
+  AssertEqual x.deletions, 8
+
+Execute (_extract_git_status_details only insertion):
+  let x = git_info#_extract_git_status_details('13 file changed, 10 insertions', 0)
+
+Then ():
+  AssertEqual x.untracked, 0
+  AssertEqual x.changed, 13
+  AssertEqual x.insertions, 10
+  AssertEqual x.deletions, 0
+
+Execute (_extract_git_status_details only deletion):
+  let x = git_info#_extract_git_status_details('1 file changed, 3000 deletions', 0)
+
+Then ():
+  AssertEqual x.untracked, 0
+  AssertEqual x.changed, 1
+  AssertEqual x.insertions, 0
+  AssertEqual x.deletions, 3000
+
+Execute (_extract_git_status_details nothing):
+  let x = git_info#_extract_git_status_details('', 0)
+  let y = git_info#_extract_git_status_details('', 1)
+
+Then ():
+  AssertEqual x.untracked, 0
+  AssertEqual x.changed, 0
+  AssertEqual x.insertions, 0
+  AssertEqual x.deletions, 0
+  AssertEqual y.untracked, 1
+  AssertEqual y.changed, 0
+  AssertEqual y.insertions, 0
+  AssertEqual y.deletions, 0
+
+
