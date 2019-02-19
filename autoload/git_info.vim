@@ -12,10 +12,15 @@ let s:job_timestamp = -2
 let s:job_diff_response = -1
 let s:job_status_response = -1
 
-function! git_info#run_jobs() 
+function! git_info#stop_jobs()
+  let l:jobs = [s:job_branch, s:job_status, s:job_diff, s:job_timestamp]
+  map(l:jobs, {i, jid -> jid > 0 ? jobstop(jid) : jid})
+endfunction
+
+function! git_info#run_jobs()
   let l:working_dir = fnamemodify(resolve(expand('%')), ':p:h')
 
-  " we're starting our jobs so make sure these are set to empty so 
+  " we're starting our jobs so make sure these are set to empty so
   " the completion check doesnt fail
   let s:job_diff_response = -1
   let s:job_status_response = -1
