@@ -49,6 +49,9 @@ function! git_info#run_jobs()
   " and b means we might sit with outdated data, so it seems to me that it's better
   " to just let jobs be, theoretically long running jobs will still finish in order
   let l:working_dir = fnamemodify(resolve(expand('%')), ':p:h')
+  if isdirectory(l:working_dir) == v:false
+    return
+  endif
 
   " we're starting our jobs so make sure these are set to empty so
   " the completion check doesnt fail
