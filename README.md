@@ -20,15 +20,15 @@ Currently, `git-info` is not compatible with VIM due to incompatibilities in the
 
 # Usage
 
-`git-info` exposes the following variables:
+`git-info` exposes the following functions:
 
-- `g:git_info_branch_name`: the name of the current branch.
+- `git_info#branch_name()`: the name of the current branch.
 
-- `g:git_info_last_commit_timestamp`: a number representing the unix timestamp of the last git commit.
+- `git_info#last_commit_timestamp()`: a number representing the unix timestamp of the last git commit.
   - `-1` if no commit has been made.
   - You can convert this to a readable format with [time-ago.vim](http://github.com/rktjmp/time-ago.vim) ("10 days ago") or to date with `strftime`. 
 
-- `g:git_info_changes`: a map containing the following keys:
+- `git_info#changes()`: a map containing the following keys:
   - `changed`: number of files with uncommitted changes.
   - `insertions`: number of `diff` insertions (linewise).
   - `deletions`: number of `diff` deletions (linewise).
@@ -58,8 +58,8 @@ Currently, `git-info` is not compatible with VIM due to incompatibilities in the
       " else return nothing which hides the subsection
       " if you did not want the icon you could just return the branch name
       " without checking, which will be blank if not inside a git repo
-      if len(g:git_info_branch_name)
-        return '⭠ ' . g:git_info_branch_name
+      if len(git_info#branch_name())
+        return '⭠ ' . git_info#branch_name()
       endif
       return ''
     endfunction
@@ -67,8 +67,9 @@ Currently, `git-info` is not compatible with VIM due to incompatibilities in the
     function! LightlineGitDirty()
       " dirty flag is left to the user since there are differening opinions
       " on whether untracked files count towards 'dirty' status
-      " g:git_info_changes.as_string provides the same information
-      if g:git_info_changes.changed > 0 || g:git_info_changes.untracked > 0
+      " git_info#changes().as_string provides the same information
+      let l:changes = git_info#changes()
+      if l:changes.changed > 0 || l:changes.untracked > 0
         return '*'
       endif
       return ''
@@ -77,17 +78,18 @@ Currently, `git-info` is not compatible with VIM due to incompatibilities in the
     function! LightlineGitStatus()
       " return the as_string representation, which will be '' if no changes
       " are present, which will hide the subsection
-      return g:git_info_changes.as_string
+      return git_info#changes().as_string
     endfunction
 
     function! LightlineGitLastCommit()
+      let l:timestamp = git_info#last_commit_timestamp()
       " check if there is no last commit
-      if g:git_info_last_commit_timestamp == -1
+      if l:timestamp == -1
         " hide subsection
         return ''
       endif
       " have a commit, convert it to a fuzzy phrase
-      let l:phrase = time_ago#fuzzy(g:git_info_last_commit_timestamp)
+      let l:phrase = time_ago#fuzzy(l:timestamp)
       " minimise the terms
       let l:phrase = substitute(l:phrase, '\v weeks?', 'w', '')
       let l:phrase = substitute(l:phrase, '\v days?', 'd', '')
