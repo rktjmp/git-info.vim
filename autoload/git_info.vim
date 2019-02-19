@@ -4,6 +4,28 @@ let s:job_status = -2
 let s:job_diff = -2
 let s:job_timestamp = -2
 
+let s:info_branch_name = ''
+let s:info_changes = {
+      \ 'insertions': 0,
+      \ 'deletions': 0,
+      \ 'untracked': 0,
+      \ 'changed': 0,
+      \ 'as_string': '',
+      \ }
+let s:info_last_commit_timestamp = -1
+
+function! git_info#branch_name()
+  return s:info_branch_name
+endfunction
+
+function! git_info#changes()
+  return s:info_changes
+endfunction
+
+function! git_info#last_commit_timestamp()
+  return s:info_last_commit_timestamp
+endfunction
+
 " The status details are gathered from two different commands, so instead
 " of having to jobwait() on one of them when the other completes first
 " we have both of them check if they're ready to proceed.
@@ -59,14 +81,17 @@ function! s:git_timestamp_job_cb(job, lines, event)
   let l:timestamp = str2nr(a:lines[0])
   if l:timestamp == 0
     let g:git_info_last_commit_timestamp = -1
+    let s:info_last_commit_timestamp = -1
   else
     let g:git_info_last_commit_timestamp = l:timestamp
+    let s:info_last_commit_timestamp = l:timestamp
   endif
   let s:job_timestamp = -2
 endfunction
 
 function! s:git_branch_job_cb(job, lines, event)
   let g:git_info_branch_name = a:lines[0]
+  let s:info_branch_name = a:lines[0]
   let s:job_branch = -2
 endfunction
 
@@ -92,10 +117,10 @@ endfunction
 
 function! s:handle_diff_and_status_responses(diff, status)
   let l:details = git_info#_extract_git_status_details(a:diff, a:status)
-  call git_info#_update_git_status_globals(l:details)
+  call git_info#_update_changes_variable(l:details)
 endfunction
 
-function! git_info#_update_git_status_globals(details)
+function! git_info#_update_changes_variable(details)
   let g:git_info_changes = a:details
 
   let l:phrase = ''
@@ -117,6 +142,9 @@ function! git_info#_update_git_status_globals(details)
   endif
 
   let g:git_info_changes.as_string = l:phrase
+
+  let s:info_changes = a:details
+  let s:info_changes.as_string = l:phrase
 endfunction
 
 function! git_info#_extract_git_status_details(diff, untracked)

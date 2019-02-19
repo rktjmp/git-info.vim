@@ -1,6 +1,6 @@
 Execute (empty change set):
   let details = {'untracked': 0, 'changed': 0, 'insertions': 0, 'deletions': 0}
-  let x = git_info#_update_git_status_globals(details)
+  let x = git_info#_update_changes_variable(details)
 
 Then():
   AssertEqual git_info#changes().untracked, 0
@@ -11,7 +11,7 @@ Then():
 
 Execute (full change set):
   let details = {'untracked': 1, 'changed': 2, 'insertions': 3, 'deletions': 4}
-  let x = git_info#_update_git_status_globals(details)
+  let x = git_info#_update_changes_variable(details)
 
 Then():
   AssertEqual git_info#changes().untracked, 1
@@ -22,7 +22,7 @@ Then():
 
 Execute (only deletions):
   let details = {'untracked': 1, 'changed': 2, 'insertions': 0, 'deletions': 4}
-  let x = git_info#_update_git_status_globals(details)
+  let x = git_info#_update_changes_variable(details)
 
 Then():
   AssertEqual git_info#changes().untracked, 1
@@ -33,7 +33,7 @@ Then():
 
 Execute (only insertions):
   let details = {'untracked': 1, 'changed': 2, 'insertions': 3, 'deletions': 0}
-  let x = git_info#_update_git_status_globals(details)
+  let x = git_info#_update_changes_variable(details)
 
 Then():
   AssertEqual git_info#changes().untracked, 1
@@ -44,7 +44,7 @@ Then():
 
 Execute (no untracked):
   let details = {'untracked': 0, 'changed': 2, 'insertions': 3, 'deletions': 4}
-  let x = git_info#_update_git_status_globals(details)
+  let x = git_info#_update_changes_variable(details)
 
 Then():
   AssertEqual git_info#changes().untracked, 0
@@ -55,7 +55,7 @@ Then():
 
 Execute (only untracked):
   let details = {'untracked': 2, 'changed': 0, 'insertions': 0, 'deletions': 0}
-  let x = git_info#_update_git_status_globals(details)
+  let x = git_info#_update_changes_variable(details)
 
 Then():
   AssertEqual git_info#changes().untracked, 2
@@ -63,22 +63,3 @@ Then():
   AssertEqual git_info#changes().insertions, 0
   AssertEqual git_info#changes().deletions, 0
   AssertEqual git_info#changes().as_string, 'Δ0∌2'
-
-Execute (dirty flag on for untracked):
-  let g:git_info_dirty_flag = 0
-  let details = {'untracked': 2, 'changed': 0, 'insertions': 0, 'deletions': 0}
-  let x = git_info#_update_git_status_globals(details)
-Then():
-  AssertEqual git_info#is_dirty(), 1
-
-Execute (dirty flag on for changed):
-  let details = {'untracked': 0, 'changed': 1, 'insertions': 0, 'deletions': 0}
-  let x = git_info#_update_git_status_globals(details)
-Then():
-  AssertEqual git_info#is_dirty(), 1
-
-Execute (dirty flag off):
-  let details = {'untracked': 0, 'changed': 0, 'insertions': 0, 'deletions': 0}
-  let x = git_info#_update_git_status_globals(details)
-Then():
-  AssertEqual git_info#is_dirty(), 0
