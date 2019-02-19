@@ -18,6 +18,14 @@ function! git_info#stop_jobs()
 endfunction
 
 function! git_info#run_jobs()
+  " we have the option of:
+  "
+  " a) stopping all jobs then restarting them again on save or
+  " b) not running jobs if we have existing jobs
+  "
+  " a means we might never complete a job for huge repositories (theoretically...)
+  " and b means we might sit with outdated data, so it seems to me that it's better
+  " to just let jobs be, theoretically long running jobs will still finish in order
   let l:working_dir = fnamemodify(resolve(expand('%')), ':p:h')
 
   " we're starting our jobs so make sure these are set to empty so
