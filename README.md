@@ -89,7 +89,7 @@ Currently, `git-info` is not compatible with VIM due to incompatibilities in the
         return ''
       endif
       " have a commit, convert it to a fuzzy phrase
-      let l:phrase = time_ago#fuzzy(l:timestamp)
+      let l:phrase = time_ago#fuzzy_from_now(l:timestamp)
       " minimise the terms
       let l:phrase = substitute(l:phrase, '\v weeks?', 'w', '')
       let l:phrase = substitute(l:phrase, '\v days?', 'd', '')
