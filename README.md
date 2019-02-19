@@ -12,6 +12,8 @@ Currently, `git-info` is not compatible with VIM due to incompatibilities in the
 
 # Installation
 
+`git-info` requires `neovim v0.3.1+` and is only tested with at least `git v2.20+`.
+
 ## Using [vim-plug](https://github.com/junegunn/vim-plug)
 
     Plug 'rktjmp/git-info.vim'
@@ -110,3 +112,7 @@ An example of this might be `exuberant ctags` if set to create tag files in your
 On save, ctags will create `tags.temp` and `tags.lock`, update `tags` then remove `tags.temp` and `tags.lock`. However our `git status` command is run during this time and spots 2 new untracked files.
 
 The solution to this is adding the additional files to your `.gitignore`.
+
+# TODO
+
+[ ] Remote ahead/behind tracking
